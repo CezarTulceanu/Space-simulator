@@ -7,7 +7,7 @@ Proiectul are scopul de a reține și modifica o bază de date care conține inf
 Fiecare obiect este recunoscut după un id specific
 Navele sunt de 4 tipuri iar stelele de 6
 
-#Funcționalități
+Funcționalități:
 
 Aplicația funcționează prin primire unui cod de acțiune de la tastatură cu următoarele semnificații:
 
