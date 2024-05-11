@@ -467,6 +467,10 @@ int main()
     {
         cout<<"Insert action code: ";
         cin>>op;
+        if(op==0)
+        {
+            return 0;
+        }
         if(op==1) ///add doctor
         {
             string nam;
