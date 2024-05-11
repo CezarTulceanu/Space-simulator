@@ -1,44 +1,53 @@
 # Space-simulator
 
 
-Proiectul are scopul de a reține și modifica o bază de date care conține informații despre sistemele solare, stelele, planetele și navetele pe care o civilizație avansată le deține
-
-
-Fiecare obiect este recunoscut după un id specific
-Navele sunt de 4 tipuri iar stelele de 6
+Proiectul are scopul de a reține,modifica și executa diverse operații cu o bază de date care conține informații despre corpuri cerești și oamenii care execută sarcinile necesare bunei funcționări a civilizației.
 
 Funcționalități:
 
 Aplicația funcționează prin primire unui cod de acțiune de la tastatură cu următoarele semnificații:
 
-1-citire navă
+0-oprire sistem
 
-2-citire planetă
+1-citire doctor
 
-3-citire stea
+2-citire inginer
 
-4-citire sistem solar
+3-citire asistentă
 
-5-afișarea numărului de locuri libere din nava cu id-ul citit
+4-citire pilot
 
-6-afișarea numelui navei cu id-ul citit
+5-citire însoțitor de zbor
 
-7-afișarea descrierii navei cu id-ul citit
+6-citire stea
 
-8-afișarea navei cu id-ul citit
+7-citire planetă
 
-9-afișarea planetei cu id-ul citit
+8-citire gaură neagră supermasivă
 
-10-adaugă planeta cu id-ul a la sistemul solar cu id-ul b
+9-citire gaură neagră mică
 
-11-adaugă nava cu id-ul a la planeta cu id-ul b
+11-afișare valoarea pilotului cu indicele introdus
 
-12-afișează vârsta stelei cu id-ul a
+12-afișare valoarea însoțitorului de zbor cu indicele introdus
 
-13-afișează steaua cu id-ul citit
+13-afișare coeficient de potențial a stelei cu indicele introdus
 
-14-afișează sistemul solar cu id-ul citit
+14-afișare coeficient de potențial a planetei cu indicele introdus
 
-15-afișează populația sistemului solar cu id-ul citit
+15-afișare coeficient de potențial a găurii negre supermasive cu indicele introdus
 
-16-afișează populația planetei cu id-ul citit
+16-afișare coeficient de potențial a găurii negre mici cu indicele introdus
+
+17-afișare rată de succes a doctorului cu indicele introdus
+
+21-afișare număr total de operații executate
+
+22-adăugare operații făcute de doctori care nu sunt înregitrați în sistem
+
+31-afișarea numelui găurii negre supermasive cu indicele introdus
+
+32-afișarea numelui găurii negre mici cu indicele introdus
+
+
+
