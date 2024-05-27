@@ -459,7 +459,7 @@ void Orbiter(int star_index)
     }
     while(true)
     {
-        cout<<"Insert rotation number:\n";
+        cout<<"Insert rotation number: ";
         cin>>rot;
         if(rot==0)
         {
@@ -508,29 +508,33 @@ int main()
     {
         cout<<"Insert action code: ";
         cin>>op;
-        if(op==1)
+        if(op==0)
+        {
+            break;
+        }
+        if(op==1) ///Insert star
         {
             string nam;
             int temp;
-            cout<<"Star's name:\n";
+            cout<<"Star's name: ";
             cin>>nam;
-            cout<<"Star's temperature:\n";
+            cout<<"Star's temperature: ";
             cin>>temp;
             Star st(nam,temp);
             Universe& universe=Universe::getInstance();
             universe.addStar(st);
             cout<<"Index of star: "<<universe.get_number_of_stars()<<"\n";
         }
-        if(op==2)
+        if(op==2) ///Insert planet
         {
             string nam;
             int pop;
             int star_index;
-            cout<<"Index of star around which this planet orbits:\n";
+            cout<<"Index of star around which this planet orbits: ";
             cin>>star_index;
-            cout<<"Planet's name:\n";
+            cout<<"Planet's name: ";
             cin>>nam;
-            cout<<"Planet's population:\n";
+            cout<<"Planet's population: ";
             cin>>pop;
             Planet pl(nam,pop);
             Universe& universe=Universe::getInstance();
@@ -538,85 +542,85 @@ int main()
             cout<<"Index of star: "<<star_index<<"\n";
             cout<<"Index of planet: "<<universe.get_star_pointer(star_index)->get_orbit_pointer()->get_cardinal()<<"\n";
         }
-        if(op==3)
+        if(op==3)  ///Insert asteroid
         {
             string nam;
             int planet_index;
             int star_index;
-            cout<<"Index of star that is orbited by the planet that is orbited by the asteroid:\n";
+            cout<<"Index of star that is orbited by the planet that is orbited by the asteroid: ";
             cin>>star_index;
-            cout<<"Index of planet that is orbited by the asteroid:\n";
+            cout<<"Index of planet that is orbited by the asteroid: ";
             cin>>planet_index;
-            cout<<"Asteroid's name:\n";
+            cout<<"Asteroid's name: ";
             cin>>nam;
             Asteroid as(nam);
             Universe& universe=Universe::getInstance();
             universe.get_star_pointer(star_index)->get_orbit_pointer()->get_element_pointer(planet_index)->get_orbit_pointer()->add(as);
         }
-        if(op==4)
+        if(op==4) ///Insert ship
         {
             string nam;
             string loc;
-            cout<<"Ship's name:\n";
+            cout<<"Ship's name: ";
             cin>>nam;
-            cout<<"Ship's location:\n";
+            cout<<"Ship's location: ";
             cin>>loc;
             Ship sh(nam,loc);
             Universe& universe=Universe::getInstance();
             universe.addShip(sh);
             cout<<"Index of ship: "<<universe.get_number_of_ships()<<"\n";
         }
-        if(op==5)
+        if(op==5) ///Insert crew member
         {
             string nam;
             string loc;
-            cout<<"Crew member's name:\n";
+            cout<<"Crew member's name: ";
             cin>>nam;
-            cout<<"Crew member's location:\n";
+            cout<<"Crew member's location: ";
             cin>>loc;
             Crew cr(nam,loc);
             Universe& universe=Universe::getInstance();
             universe.addCrew(cr);
             cout<<"Index of crew: "<<universe.get_number_of_crews()<<"\n";
         }
-        if(op==6)///insert colonist with a new base
+        if(op==6)/// Insert colonist with a new base
         {
             string colonist_name;
             string base_name;
             int area;
-            cout<<"Colonist's name:\n";
+            cout<<"Colonist's name: ";
             cin>>colonist_name;
-            cout<<"Name of base:\n";
+            cout<<"Name of base: ";
             cin>>base_name;
-            cout<<"Area of base:\n";
+            cout<<"Area of base: ";
             cin>>area;
             Universe& universe=Universe::getInstance();
             universe.addColonist_pointer(make_unique<Colonist>(colonist_name,make_shared<Base>(base_name,area)));
             cout<<"Index of colonist: "<<universe.get_number_of_colonists()<<"\n";
         }
-        if(op==7)///insert colonist with existing base
+        if(op==7)  ///Insert colonist with existing base
         {
             string colonist_name;
             int colonist_index;
-            cout<<"Colonist's name:\n";
+            cout<<"Colonist's name: ";
             cin>>colonist_name;
-            cout<<"Index of a colonist that is already located in the base:\n";
+            cout<<"Index of a colonist that is already located in the base: ";
             cin>>colonist_index;
             Universe& universe=Universe::getInstance();
             universe.addColonist_pointer(make_unique<Colonist>(colonist_name,universe.get_colonist_base_pointer(colonist_index)));
             cout<<"Index of colonist: "<<universe.get_number_of_colonists()<<"\n";
         }
-        if(op==11)
+        if(op==11)  ///Shuffle asteroids of a planet
         {
             int star_index;
             int planet_index;
             int code;
             Shuffler automata;
-            cout<<"Index of star that is orbited by the planet:\n";
+            cout<<"Index of star that is orbited by the planet: ";
             cin>>star_index;
-            cout<<"Index of planet:\n";
+            cout<<"Index of planet: ";
             cin>>planet_index;
-            cout<<"1-Pair shuffling\n2-Reverse shuffling\n3-Random shuffling\nChoose shuffling method:\n";
+            cout<<"1-Pair shuffling\n2-Reverse shuffling\n3-Random shuffling\nChoose shuffling method: ";
             cin>>code;
             if(code==1)
             {
@@ -638,75 +642,75 @@ int main()
             Planet& act= *ptr;
             automata.shuffled(act);
         }
-        if(op==12)
+        if(op==12)  ///Add crew member to ship
         {
             int ship_index;
             int crew_index;
-            cout<<"Index of ship:\n";
+            cout<<"Index of ship: ";
             cin>>ship_index;
-            cout<<"Index of crew:\n";
+            cout<<"Index of crew: ";
             cin>>crew_index;
             Universe& universe=Universe::getInstance();
             Crew* cr=universe.get_crew_pointer(crew_index);
             cr->add_to_ship(ship_index);
         }
-        if(op==13)
+        if(op==13)  ///Change location of ship
         {
             int ship_index;
             string loc;
-            cout<<"Index of ship:\n";
+            cout<<"Index of ship: ";
             cin>>ship_index;
-            cout<<"New location:\n";
+            cout<<"New location: ";
             cin>>loc;
             Universe& universe=Universe::getInstance();
             Ship* sh=universe.get_ship_pointer(ship_index);
             sh->change_location(loc);
         }
-        if(op==14) ///remove from ship
+        if(op==14) ///Remove crew member from ship
         {
             int crew_index;
-            cout<<"Index of crew:\n";
+            cout<<"Index of crew: ";
             cin>>crew_index;
             Universe& universe=Universe::getInstance();
             universe.get_crew_pointer(crew_index)->remove_from_ship();
         }
-        if(op==16)///capitalize star
+        if(op==16)///Capitalize star name
         {
             int star_index;
-            cout<<"Index of star:\n";
+            cout<<"Index of star: ";
             cin>>star_index;
             Universe& universe=Universe::getInstance();
             Star* st=universe.get_star_pointer(star_index);
             Capitalize(st);
         }
-        if(op==17)///capitalize planet
+        if(op==17)///Capitalize planet name
         {
             int star_index;
             int planet_index;
-            cout<<"Index of star that is orbited by the planet:\n";
+            cout<<"Index of star that is orbited by the planet: ";
             cin>>star_index;
-            cout<<"Index of planet:\n";
+            cout<<"Index of planet: ";
             cin>>planet_index;
             Universe& universe=Universe::getInstance();
             Planet* pl=universe.get_star_pointer(star_index)->get_orbit_pointer()->get_element_pointer(planet_index);
             Capitalize(pl);
         }
-        if(op==18) ///remove colonist
+        if(op==18) ///Remove colonist
         {
             int colonist_index;
-            cout<<"Index of colonist:\n";
+            cout<<"Index of colonist: ";
             cin>>colonist_index;
             Universe& universe=Universe::getInstance();
             universe.remove_colonist(colonist_index);
             cout<<"The colonist has been removed and it's allocated memory has been freed\n";
         }
-        if(op==21)
+        if(op==21) ///Show planet info
         {
             int star_index;
             int planet_index;
-            cout<<"Index of star that is orbited by the planet:\n";
+            cout<<"Index of star that is orbited by the planet: ";
             cin>>star_index;
-            cout<<"Index of planet:\n";
+            cout<<"Index of planet: ";
             cin>>planet_index;
             Universe& universe=Universe::getInstance();
             Planet* ptr=universe.get_star_pointer(star_index)->get_orbit_pointer()->get_element_pointer(planet_index);
@@ -721,10 +725,10 @@ int main()
                 cout<<w.get_name()<<"\n";
             }
         }
-        if(op==22) ///Print star information
+        if(op==22) ///Show star information
         {
             int star_index;
-            cout<<"Index of star:\n";
+            cout<<"Index of star: ";
             cin>>star_index;
             Universe& universe=Universe::getInstance();
             Star* ptr=universe.get_star_pointer(star_index);
@@ -739,10 +743,10 @@ int main()
                 cout<<w.get_name()<<"\n";
             }
         }
-        if(op==23)  ///Print star information with planets in lexicographical order
+        if(op==23)  ///Show star information with planets in lexicographical order
         {
             int star_index;
-            cout<<"Index of star:\n";
+            cout<<"Index of star: ";
             cin>>star_index;
             Universe& universe=Universe::getInstance();
             Star* ptr=universe.get_star_pointer(star_index);
@@ -763,10 +767,10 @@ int main()
                 cout<<w<<"\n";
             }
         }
-        if(op==24)
+        if(op==24) ///Show ship info
         {
             int ship_index;
-            cout<<"Index of ship:\n";
+            cout<<"Index of ship: ";
             cin>>ship_index;
             Universe& universe=Universe::getInstance();
             Ship* sh=universe.get_ship_pointer(ship_index);
@@ -779,46 +783,46 @@ int main()
                 cout<<cr->get_name()<<"\n";
             }
         }
-        if(op==25)
+        if(op==25) ///Show crew member info
         {
             int crew_index;
-            cout<<"Index of crew member:\n";
+            cout<<"Index of crew member: ";
             cin>>crew_index;
             Universe& universe=Universe::getInstance();
             Crew* cr=universe.get_crew_pointer(crew_index);
             cout<<"Crew member's name: "<<cr->get_name()<<"\n";
             cout<<"Crew member's location: "<<cr->get_location()<<"\n";
         }
-        if(op==26)
+        if(op==26) ///Show crew member's ship
         {
             int crew_index;
-            cout<<"Index of crew member:\n";
+            cout<<"Index of crew member: ";
             cin>>crew_index;
             Universe& universe=Universe::getInstance();
             Ship* sh=universe.get_ship_pointer_of_crew(crew_index);
             cout<<"Crew member's ship: "<<sh->get_name()<<"\n";
         }
-        if(op==27) ///print colonist's name
+        if(op==27) ///Show colonist's name
         {
             int colonist_index;
-            cout<<"Index of colonist:\n";
+            cout<<"Index of colonist: ";
             cin>>colonist_index;
             Universe& universe=Universe::getInstance();
             cout<<"Colonist's name: "<<universe.get_colonist_name(colonist_index)<<"\n";
         }
-        if(op==28) ///print colonist's base's info
+        if(op==28) ///Show colonist's base's info
         {
             int colonist_index;
-            cout<<"Index of colonist:\n";
+            cout<<"Index of colonist: ";
             cin>>colonist_index;
             Universe& universe=Universe::getInstance();
             cout<<"Name of base: "<<universe.get_colonist_base_pointer(colonist_index)->get_name()<<"\n";
             cout<<"Area of base: "<<universe.get_colonist_base_pointer(colonist_index)->get_area()<<"\n";
         }
-        if(op==31)
+        if(op==31) ///Show the orbit of a star after rotations
         {
             int star_index;
-            cout<<"Index of star:\n";
+            cout<<"Index of star: ";
             cin>>star_index;
             Orbiter(star_index);
         }
