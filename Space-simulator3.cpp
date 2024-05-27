@@ -174,12 +174,7 @@ public:
 class reverse_shuffle : public shuffle_strategy<Asteroid> {
 public:
     void shuffled(vector<Asteroid> &v) override {
-        vector<Asteroid> w;
-        for(int it=v.size()-1;it>=0;it--)
-        {
-            w.push_back(v[it]);
-        }
-        v=w;
+        reverse(v.begin(),v.end());
     }
 };
 
@@ -299,38 +294,43 @@ public:
         return location;
     }
     void add_to_ship(int nr);
+    void remove_from_ship();
 };
 
 class Base
 {
 private:
-    string name:
+    string name;
     int area;
 public:
     string get_name()
     {
         return name;
     }
-    Base(string nam,int ar)
+    int get_area()
     {
-        name=nam;
-        area=ar;
+        return area;
     }
+    Base(string nam,int ar) : name(nam),area(ar){}
+    ~Base(){}
 };
 
 class Colonist
 {
 private:
     string name;
+    shared_ptr<Base> bptr=nullptr;
 public:
     string get_name()
     {
         return name;
     }
-    Colonist(string nam)
+    shared_ptr<Base> get_base_pointer()
     {
-        name=nam;
+        return bptr;
     }
+    Colonist(string nam,shared_ptr<Base> bas) : name(nam),bptr(bas){}
+    ~Colonist(){}
 };
 
 class Universe  ///singleton
@@ -340,7 +340,7 @@ private:
     vector<Star> stars;
     vector<Ship> ships;
     vector<Crew> crews;
-    vector<Colonist> colonists;
+    vector<unique_ptr<Colonist>> colonist_pointers;
     map<Crew*,Ship*> ship_of_crew;
     Universe(const Universe&) = delete;
     Universe& operator=(const Universe&) = delete;
@@ -389,21 +389,37 @@ public:
     {
         return ship_of_crew[get_crew_pointer(nr)];
     }
+    Ship* get_ship_pointer_of_crew_cool(Crew* cr)
+    {
+        return ship_of_crew[cr];
+    }
     void assign_crew(Crew* cr,Ship* sh)
     {
         ship_of_crew[cr]=sh;
     }
-    void addColonist(Colonist colonist)
+    void disassign_crew(Crew* cr,Ship* sh)
     {
-        colonists.push_back(colonist);
+        ship_of_crew[cr]=nullptr;
     }
-    Colonist* get_colonist_pointer(int nr)
+    void addColonist_pointer(unique_ptr<Colonist> cptr)
     {
-        return &colonists[nr-1];
+        colonist_pointers.push_back(move(cptr));
+    }
+    string get_colonist_name(int nr)
+    {
+        return colonist_pointers[nr-1]->get_name();
+    }
+    shared_ptr<Base> get_colonist_base_pointer(int nr)
+    {
+        return colonist_pointers[nr-1]->get_base_pointer();
     }
     int get_number_of_colonists()
     {
-        return colonists.size();
+        return colonist_pointers.size();
+    }
+    void remove_colonist(int nr)
+    {
+        colonist_pointers[nr-1]=nullptr;
     }
 };
 
@@ -414,6 +430,14 @@ void Crew::add_to_ship(int nr)
         sh->attach(this);
         universe.assign_crew(this,sh);
         update(sh->get_location());
+}
+
+void Crew::remove_from_ship()
+{
+        Universe& universe=Universe::getInstance();
+        Ship* sh=universe.get_ship_pointer_of_crew_cool(this);
+        sh->detach(this);
+        universe.disassign_crew(this,sh);
 }
 
 void Orbiter(int star_index)
@@ -566,12 +590,21 @@ int main()
             cin>>base_name;
             cout<<"Area of base:\n";
             cin>>area;
-            unique_ptr<Colonist> cptr=make_unique<Colonist>(colonist_name);
-            ///THERE IS A LOT TO FIX
+            Universe& universe=Universe::getInstance();
+            universe.addColonist_pointer(make_unique<Colonist>(colonist_name,make_shared<Base>(base_name,area)));
+            cout<<"Index of colonist: "<<universe.get_number_of_colonists()<<"\n";
         }
         if(op==7)///insert colonist with existing base
         {
-
+            string colonist_name;
+            int colonist_index;
+            cout<<"Colonist's name:\n";
+            cin>>colonist_name;
+            cout<<"Index of a colonist that is already located in the base:\n";
+            cin>>colonist_index;
+            Universe& universe=Universe::getInstance();
+            universe.addColonist_pointer(make_unique<Colonist>(colonist_name,universe.get_colonist_base_pointer(colonist_index)));
+            cout<<"Index of colonist: "<<universe.get_number_of_colonists()<<"\n";
         }
         if(op==11)
         {
@@ -629,7 +662,15 @@ int main()
             Ship* sh=universe.get_ship_pointer(ship_index);
             sh->change_location(loc);
         }
-        if(op==16)//capitalize star
+        if(op==14) ///remove from ship
+        {
+            int crew_index;
+            cout<<"Index of crew:\n";
+            cin>>crew_index;
+            Universe& universe=Universe::getInstance();
+            universe.get_crew_pointer(crew_index)->remove_from_ship();
+        }
+        if(op==16)///capitalize star
         {
             int star_index;
             cout<<"Index of star:\n";
@@ -638,7 +679,7 @@ int main()
             Star* st=universe.get_star_pointer(star_index);
             Capitalize(st);
         }
-        if(op==17)//capitalize planet
+        if(op==17)///capitalize planet
         {
             int star_index;
             int planet_index;
@@ -649,6 +690,15 @@ int main()
             Universe& universe=Universe::getInstance();
             Planet* pl=universe.get_star_pointer(star_index)->get_orbit_pointer()->get_element_pointer(planet_index);
             Capitalize(pl);
+        }
+        if(op==18) ///remove colonist
+        {
+            int colonist_index;
+            cout<<"Index of colonist:\n";
+            cin>>colonist_index;
+            Universe& universe=Universe::getInstance();
+            universe.remove_colonist(colonist_index);
+            cout<<"The colonist has been removed and it's allocated memory has been freed\n";
         }
         if(op==21)
         {
@@ -671,7 +721,7 @@ int main()
                 cout<<w.get_name()<<"\n";
             }
         }
-        if(op==22)
+        if(op==22) ///Print star information
         {
             int star_index;
             cout<<"Index of star:\n";
@@ -687,6 +737,30 @@ int main()
             for(auto w:actt)
             {
                 cout<<w.get_name()<<"\n";
+            }
+        }
+        if(op==23)  ///Print star information with planets in lexicographical order
+        {
+            int star_index;
+            cout<<"Index of star:\n";
+            cin>>star_index;
+            Universe& universe=Universe::getInstance();
+            Star* ptr=universe.get_star_pointer(star_index);
+            Star& act= *ptr;
+            cout<<"Name of star: "<<act.get_name()<<"\n";
+            cout<<"Temperature: "<<act.get_temperature()<<"\n";
+            cout<<"Planets that orbit the star in order:\n";
+            vector<Planet>* ptrr=act.get_orbit_pointer()->get_vector_pointer();
+            vector<Planet>& actt= *ptrr;
+            vector<string> nv;
+            for(auto w:actt)
+            {
+                nv.push_back(w.get_name());
+            }
+            sort(nv.begin(),nv.end());
+            for(auto w:nv)
+            {
+                cout<<w<<"\n";
             }
         }
         if(op==24)
@@ -723,6 +797,23 @@ int main()
             Universe& universe=Universe::getInstance();
             Ship* sh=universe.get_ship_pointer_of_crew(crew_index);
             cout<<"Crew member's ship: "<<sh->get_name()<<"\n";
+        }
+        if(op==27) ///print colonist's name
+        {
+            int colonist_index;
+            cout<<"Index of colonist:\n";
+            cin>>colonist_index;
+            Universe& universe=Universe::getInstance();
+            cout<<"Colonist's name: "<<universe.get_colonist_name(colonist_index)<<"\n";
+        }
+        if(op==28) ///print colonist's base's info
+        {
+            int colonist_index;
+            cout<<"Index of colonist:\n";
+            cin>>colonist_index;
+            Universe& universe=Universe::getInstance();
+            cout<<"Name of base: "<<universe.get_colonist_base_pointer(colonist_index)->get_name()<<"\n";
+            cout<<"Area of base: "<<universe.get_colonist_base_pointer(colonist_index)->get_area()<<"\n";
         }
         if(op==31)
         {
